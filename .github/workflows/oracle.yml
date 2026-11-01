@@ -1,7 +1,7 @@
 name: oracle-retry
 on:
   schedule:
-    - cron: "*/10 * * * *"
+    - cron: "7,22,37,52 * * * *"
   workflow_dispatch:
 jobs:
   try:
@@ -20,7 +20,7 @@ jobs:
           chmod 600 ~/.oci/key.pem
           cat > ~/.oci/config <<EOF
           [DEFAULT]
-           user=${{ secrets.OCI_USER }}
+          user=${{ secrets.OCI_USER }}
           fingerprint=${{ secrets.OCI_FINGERPRINT }}
           tenancy=${{ secrets.OCI_TENANCY }}
           region=${{ secrets.OCI_REGION }}
