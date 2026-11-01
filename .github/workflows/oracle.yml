@@ -1,12 +1,15 @@
 name: oracle-retry
 on:
   schedule:
-    - cron: "7,22,37,52 * * * *"
+    - cron: "7 */6 * * *"
   workflow_dispatch:
+concurrency:
+  group: oracle-launch
+  cancel-in-progress: false
 jobs:
   try:
     runs-on: ubuntu-latest
-    timeout-minutes: 10
+    timeout-minutes: 340
     steps:
       - uses: actions/checkout@v4
       - name: Install OCI CLI
