@@ -1,12 +1,13 @@
 #!/bin/bash
+export OCI_CLI_SUPPRESS_FILE_PERMISSIONS_WARNING=True
 NAME="my-server"
 echo "$SSH_PUBLIC_KEY" > /tmp/key.pub
 CFG='{"ocpus":2,"memoryInGBs":12}'
 
 for i in $(seq 1 100); do
-  COUNT=$(oci compute instance list -c "$OCI_TENANCY" --display-name "$NAME" \
-    --query 'data[?"lifecycle-state"!=`TERMINATED`] | length(@)' --raw-output)
-  if [ "$COUNT" != "0" ]; then echo "Server exists, done."; exit 0; fi
+  EXIST=$(oci compute instance list -c "$OCI_TENANCY" --display-name "$NAME" \
+    --query 'data[?"lifecycle-state"!=`TERMINATED`].id' 2>/dev/null | grep -c "ocid1" || true)
+  if [ "$EXIST" != "0" ]; then echo "Server exists, done."; exit 0; fi
 
   echo "Attempt $i: $(date)"
   OUT=$(oci compute instance launch \
